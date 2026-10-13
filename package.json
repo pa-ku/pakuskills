@@ -1,0 +1,13 @@
+{
+  "name": "paku-skills",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": {
+    "paku-skills": "./cli.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.8.0",
+    "@octokit/rest": "^20.0.0",
+    "execa": "^8.0.0"
+  }
+}
