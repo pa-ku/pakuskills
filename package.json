@@ -1,13 +1,36 @@
 {
-  "name": "paku-skills",
+  "name": "pakuskills",
   "version": "1.0.0",
+  "description": "Interactive installer for the pa-ku/paku-skills OpenCode skill catalog",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pa-ku/pakuskills.git"
+  },
+  "keywords": [
+    "opencode",
+    "skills",
+    "installer",
+    "cli"
+  ],
   "bin": {
-    "paku-skills": "./cli.js"
+    "pakuskills": "./cli.js"
+  },
+  "files": [
+    "cli.js"
+  ],
+  "scripts": {
+    "start": "node cli.js",
+    "check": "node --check cli.js",
+    "prepublishOnly": "pnpm check"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "@clack/prompts": "^0.8.0",
     "@octokit/rest": "^20.0.0",
-    "execa": "^8.0.0"
+    "degit": "^3.10.0"
   }
 }
