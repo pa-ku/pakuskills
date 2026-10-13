@@ -86,8 +86,6 @@ async function main() {
     return;
   }
 
-  p.intro('⚡ PAKU SKILLS INSTALLER');
-
   let target;
   try {
     target = resolveTarget();

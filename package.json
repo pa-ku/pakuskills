@@ -1,6 +1,6 @@
 {
   "name": "pakuskills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interactive installer for the pa-ku/paku-skills OpenCode skill catalog",
   "type": "module",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "cli"
   ],
   "bin": {
-    "pakuskills": "./cli.js"
+    "pakuskills": "cli.js"
   },
   "files": [
     "cli.js"
