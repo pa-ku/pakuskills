@@ -18,11 +18,9 @@ Requires Node.js 20+ and an interactive terminal.
 4. Downloads each one with `degit` (no git history, no full clone)
 
 ```
-⚡ PAKU SKILLS INSTALLER
 ◇ Destino: .opencode/skills
-◇ Catálogo cargado correctamente.
 ◇ Instalando lcp-optimization...
-✓ Skill 'lcp-optimization' instalada
+✓ Skill 'lcp-optimization' instalada en .opencode/skills/lcp-optimization
 ```
 
 ## Install targets
@@ -44,6 +42,7 @@ The default is `.opencode/skills/`. The three target families follow the [Agent 
 |----------|--------|
 | `PAKU_SKILLS_TARGET` | Skips the destination prompt. One of `opencode`, `opencode-global`, `generic`, `generic-global`, `claude`, `claude-global`. |
 | `GITHUB_TOKEN` | Optional. Raises the GitHub API rate limit from 60 to 5000 requests/hour. |
+| `DEBUG` | Optional. Prints the full stack trace on unexpected errors. |
 
 ```bash
 # Example: install into ~/.agents/skills without the prompt
@@ -86,6 +85,7 @@ pnpm start   # run locally (needs an interactive terminal)
 |---------|-------|
 | `✕ Este instalador necesita una terminal interactiva` | You ran it in a pipeline or CI script. Use an interactive shell, or set `PAKU_SKILLS_TARGET` and run from a real terminal. |
 | `rate limit de GitHub` | Unauthenticated API is capped at 60 requests/hour. Export `GITHUB_TOKEN`. |
+| `PAKU_SKILLS_TARGET inválido` | The value does not match any target. Valid values: `opencode`, `opencode-global`, `generic`, `generic-global`, `claude`, `claude-global`. |
 | `GitHub respondió 404` | The `SKILLS/` folder was renamed or moved. Update `SKILLS_PATH` in `cli.js`. |
 | Skill installed but not showing up | The frontmatter `name` does not match the folder name, or the file is not named `SKILL.md`. |
 | Skill already exists prompt | The installer asks before overwriting. `No` skips that skill. |
