@@ -1,7 +1,7 @@
 {
   "name": "pakuskills",
   "version": "1.0.1",
-  "description": "Interactive installer for the pa-ku/paku-skills OpenCode skill catalog",
+  "description": "Interactive installer for the skills shipped in pa-ku/pakuskills",
   "type": "module",
   "license": "MIT",
   "repository": {

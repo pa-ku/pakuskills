@@ -8,7 +8,8 @@ import os from 'node:os';
 import path from 'node:path';
 
 const REPO_OWNER = 'pa-ku';
-const REPO_NAME = 'paku-skills';
+const REPO_NAME = 'pakuskills';
+const SKILLS_PATH = 'SKILLS';
 
 const HOME = os.homedir();
 
@@ -69,7 +70,7 @@ async function fetchCatalog() {
   const { data } = await octokit.repos.getContent({
     owner: REPO_OWNER,
     repo: REPO_NAME,
-    path: '',
+    path: SKILLS_PATH,
   });
 
   return data
@@ -131,7 +132,9 @@ async function main() {
         : err.status
           ? `GitHub respondió ${err.status}`
           : 'sin conexión con GitHub';
-    p.cancel(`Error consultando ${REPO_OWNER}/${REPO_NAME}: ${reason}.`);
+    p.cancel(
+      `Error consultando ${REPO_OWNER}/${REPO_NAME}/${SKILLS_PATH}: ${reason}.`,
+    );
     process.exitCode = 1;
     return;
   }
@@ -182,10 +185,13 @@ async function main() {
     installSpinner.start(`Instalando ${skill}...`);
 
     try {
-      const degitInstance = degit(`${REPO_OWNER}/${REPO_NAME}/${skill}`, {
-        force: true,
-        verbose: false,
-      });
+      const degitInstance = degit(
+        `${REPO_OWNER}/${REPO_NAME}/${SKILLS_PATH}/${skill}`,
+        {
+          force: true,
+          verbose: false,
+        },
+      );
       await degitInstance.clone(targetDir);
       installed.push(skill);
       installSpinner.stop(`✓ Skill '${skill}' instalada en ${targetDir}`);
