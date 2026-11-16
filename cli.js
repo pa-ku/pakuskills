@@ -15,40 +15,16 @@ const HOME = os.homedir();
 
 const TARGETS = [
   {
-    value: 'opencode',
-    label: 'opencode (proyecto)',
-    hint: '.opencode/skills/',
-    dir: path.join('.opencode', 'skills'),
-  },
-  {
-    value: 'opencode-global',
-    label: 'opencode (global)',
-    hint: '~/.config/opencode/skills/',
-    dir: path.join(HOME, '.config', 'opencode', 'skills'),
-  },
-  {
-    value: 'generic',
-    label: 'Genérico Agent Skills (proyecto)',
+    value: 'agents',
+    label: 'Proyecto (local)',
     hint: '.agents/skills/ — VS Code, Copilot, Codex, opencode',
     dir: path.join('.agents', 'skills'),
   },
   {
-    value: 'generic-global',
-    label: 'Genérico Agent Skills (global)',
-    hint: '~/.agents/skills/',
+    value: 'agents-global',
+    label: 'Global (usuario)',
+    hint: '~/.agents/skills/ — todos los proyectos',
     dir: path.join(HOME, '.agents', 'skills'),
-  },
-  {
-    value: 'claude',
-    label: 'Claude Code (proyecto)',
-    hint: '.claude/skills/',
-    dir: path.join('.claude', 'skills'),
-  },
-  {
-    value: 'claude-global',
-    label: 'Claude Code (personal)',
-    hint: '~/.claude/skills/',
-    dir: path.join(HOME, '.claude', 'skills'),
   },
 ];
 
@@ -104,7 +80,7 @@ async function main() {
         label: t.label,
         hint: t.hint,
       })),
-      initialValue: 'opencode',
+      initialValue: 'agents',
     });
 
     if (p.isCancel(target)) {

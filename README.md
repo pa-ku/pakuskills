@@ -18,35 +18,31 @@ Requires Node.js 20+ and an interactive terminal.
 4. Downloads each one with `degit` (no git history, no full clone)
 
 ```
-◇ Destino: .opencode/skills
+◇ Destino: .agents/skills
 ◇ Instalando lcp-optimization...
-✓ Skill 'lcp-optimization' instalada en .opencode/skills/lcp-optimization
+✓ Skill 'lcp-optimization' instalada en .agents/skills/lcp-optimization
 ```
 
 ## Install targets
 
 | Target | Path | Loaded by |
 |--------|------|-----------|
-| opencode (project) | `.opencode/skills/` | opencode in this repo |
-| opencode (global) | `~/.config/opencode/skills/` | opencode, all projects |
-| Generic Agent Skills (project) | `.agents/skills/` | VS Code, Copilot, Codex, opencode |
-| Generic Agent Skills (global) | `~/.agents/skills/` | same, all projects |
-| Claude Code (project) | `.claude/skills/` | Claude Code in this repo |
-| Claude Code (personal) | `~/.claude/skills/` | Claude Code, all projects |
+| Project (local) | `.agents/skills/` | VS Code, Copilot, Codex, opencode in this repo |
+| Global (user) | `~/.agents/skills/` | same, all projects |
 
-The default is `.opencode/skills/`. The three target families follow the [Agent Skills](https://agentskills.io) open standard — the same `SKILL.md` folder works across tools.
+The default is `.agents/skills/`. Both targets follow the [Agent Skills](https://agentskills.io) open standard — the same `SKILL.md` folder works across tools, so you no longer pick a specific agent.
 
 ## Environment variables
 
 | Variable | Effect |
 |----------|--------|
-| `PAKU_SKILLS_TARGET` | Skips the destination prompt. One of `opencode`, `opencode-global`, `generic`, `generic-global`, `claude`, `claude-global`. |
+| `PAKU_SKILLS_TARGET` | Skips the destination prompt. One of `agents`, `agents-global`. |
 | `GITHUB_TOKEN` | Optional. Raises the GitHub API rate limit from 60 to 5000 requests/hour. |
 | `DEBUG` | Optional. Prints the full stack trace on unexpected errors. |
 
 ```bash
 # Example: install into ~/.agents/skills without the prompt
-PAKU_SKILLS_TARGET=generic-global npx pakuskills
+PAKU_SKILLS_TARGET=agents-global npx pakuskills
 ```
 
 ## How to add a skill to the catalog
@@ -85,7 +81,7 @@ pnpm start   # run locally (needs an interactive terminal)
 |---------|-------|
 | `✕ Este instalador necesita una terminal interactiva` | You ran it in a pipeline or CI script. Use an interactive shell, or set `PAKU_SKILLS_TARGET` and run from a real terminal. |
 | `rate limit de GitHub` | Unauthenticated API is capped at 60 requests/hour. Export `GITHUB_TOKEN`. |
-| `PAKU_SKILLS_TARGET inválido` | The value does not match any target. Valid values: `opencode`, `opencode-global`, `generic`, `generic-global`, `claude`, `claude-global`. |
+| `PAKU_SKILLS_TARGET inválido` | The value does not match any target. Valid values: `agents`, `agents-global`. |
 | `GitHub respondió 404` | The `SKILLS/` folder was renamed or moved. Update `SKILLS_PATH` in `cli.js`. |
 | Skill installed but not showing up | The frontmatter `name` does not match the folder name, or the file is not named `SKILL.md`. |
 | Skill already exists prompt | The installer asks before overwriting. `No` skips that skill. |
