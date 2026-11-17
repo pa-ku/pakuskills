@@ -10,6 +10,7 @@ import path from 'node:path';
 const REPO_OWNER = 'pa-ku';
 const REPO_NAME = 'pakuskills';
 const SKILLS_PATH = 'SKILLS';
+const GENERAL_GROUP = 'General';
 
 const HOME = os.homedir();
 
@@ -43,15 +44,84 @@ function resolveTarget() {
 
 async function fetchCatalog() {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-  const { data } = await octokit.repos.getContent({
+  const { data } = await octokit.git.getTree({
     owner: REPO_OWNER,
     repo: REPO_NAME,
-    path: SKILLS_PATH,
+    tree_sha: 'HEAD',
+    recursive: '1',
   });
 
-  return data
-    .filter((item) => item.type === 'dir' && !item.name.startsWith('.'))
-    .map((item) => ({ value: item.name, label: item.name }));
+  const prefix = `${SKILLS_PATH}/`;
+  const skills = [];
+  const skipped = [];
+
+  for (const entry of data.tree) {
+    if (entry.type !== 'blob' || !entry.path.startsWith(prefix)) continue;
+    if (!entry.path.endsWith('/SKILL.md')) continue;
+
+    // Layout: SKILLS/<GRUPO>/<skill>/SKILL.md o SKILLS/<skill>/SKILL.md
+    const parts = entry.path.slice(prefix.length).split('/');
+    let group;
+    let name;
+
+    if (parts.length === 3) {
+      [group, name] = parts;
+    } else if (parts.length === 2) {
+      group = GENERAL_GROUP;
+      name = parts[0];
+    } else {
+      continue;
+    }
+
+    skills.push({
+      value: `${group}/${name}`,
+      group,
+      name,
+      repoPath: entry.path.slice(0, -'/SKILL.md'.length),
+    });
+  }
+
+  const skillPaths = new Set(skills.map((skill) => skill.repoPath));
+
+  for (const entry of data.tree) {
+    if (entry.type !== 'tree' || !entry.path.startsWith(prefix)) continue;
+
+    // Solo carpetas de skill candidatas: <GRUPO>/<skill>
+    const parts = entry.path.slice(prefix.length).split('/');
+    if (parts.length !== 2) continue;
+
+    if (!skillPaths.has(entry.path)) {
+      skipped.push(entry.path.slice(prefix.length));
+    }
+  }
+
+  skills.sort(
+    (a, b) => a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
+  );
+  skipped.sort();
+
+  return { skills, skipped, truncated: Boolean(data.truncated) };
+}
+
+function groupOptions(skills) {
+  const groups = {};
+
+  for (const skill of skills) {
+    (groups[skill.group] ??= []).push({
+      value: skill.value,
+      label: skill.name,
+    });
+  }
+
+  return groups;
+}
+
+function duplicatedNames(skills) {
+  const counts = new Map();
+  for (const skill of skills) {
+    counts.set(skill.name, (counts.get(skill.name) ?? 0) + 1);
+  }
+  return [...counts].filter(([, count]) => count > 1).map(([name]) => name);
 }
 
 async function main() {
@@ -97,9 +167,9 @@ async function main() {
   const spinner = p.spinner();
   spinner.start('Obteniendo catálogo de skills...');
 
-  let skills;
+  let catalog;
   try {
-    skills = await fetchCatalog();
+    catalog = await fetchCatalog();
   } catch (err) {
     spinner.stop('✕ No se pudo obtener el catálogo.');
     const reason =
@@ -108,23 +178,40 @@ async function main() {
         : err.status
           ? `GitHub respondió ${err.status}`
           : 'sin conexión con GitHub';
-    p.cancel(
-      `Error consultando ${REPO_OWNER}/${REPO_NAME}/${SKILLS_PATH}: ${reason}.`,
-    );
+    p.cancel(`Error consultando ${REPO_OWNER}/${REPO_NAME}: ${reason}.`);
     process.exitCode = 1;
     return;
   }
 
   spinner.stop('Catálogo cargado correctamente.');
 
+  const { skills, skipped, truncated } = catalog;
+
+  if (truncated) {
+    p.log.warn(
+      'El árbol del repositorio vino truncado: puede faltar alguna skill.',
+    );
+  }
+
+  if (skipped.length > 0) {
+    p.log.warn(`Omitidas por no tener SKILL.md: ${skipped.join(', ')}`);
+  }
+
+  const duplicated = duplicatedNames(skills);
+  if (duplicated.length > 0) {
+    p.log.warn(
+      `Hay skills con el mismo nombre en distintos grupos: ${duplicated.join(', ')}. Se instalaría una sola vez.`,
+    );
+  }
+
   if (skills.length === 0) {
-    p.outro('No se encontraron carpetas de skills en el repositorio.');
+    p.outro(`No se encontraron skills con SKILL.md en ${SKILLS_PATH}/.`);
     return;
   }
 
-  const selectedSkills = await p.multiselect({
+  const selectedSkills = await p.groupMultiselect({
     message: 'Selecciona las skills que deseas instalar:',
-    options: skills,
+    options: groupOptions(skills),
     required: true,
   });
 
@@ -134,14 +221,16 @@ async function main() {
     return;
   }
 
+  const byValue = new Map(skills.map((skill) => [skill.value, skill]));
   const installed = [];
 
-  for (const skill of selectedSkills) {
-    const targetDir = path.join(target.dir, skill);
+  for (const value of selectedSkills) {
+    const skill = byValue.get(value);
+    const targetDir = path.join(target.dir, skill.name);
 
     if (fs.existsSync(targetDir)) {
       const overwrite = await p.confirm({
-        message: `'${skill}' ya existe en ${targetDir}. ¿Sobreescribir?`,
+        message: `'${skill.name}' ya existe en ${targetDir}. ¿Sobreescribir?`,
         initialValue: false,
       });
 
@@ -152,27 +241,27 @@ async function main() {
       }
 
       if (!overwrite) {
-        p.log.warn(`Skill '${skill}' omitida (ya existía).`);
+        p.log.warn(`Skill '${skill.name}' omitida (ya existía).`);
         continue;
       }
     }
 
     const installSpinner = p.spinner();
-    installSpinner.start(`Instalando ${skill}...`);
+    installSpinner.start(`Instalando ${skill.name}...`);
 
     try {
       const degitInstance = degit(
-        `${REPO_OWNER}/${REPO_NAME}/${SKILLS_PATH}/${skill}`,
+        `${REPO_OWNER}/${REPO_NAME}/${skill.repoPath}`,
         {
           force: true,
           verbose: false,
         },
       );
       await degitInstance.clone(targetDir);
-      installed.push(skill);
-      installSpinner.stop(`✓ Skill '${skill}' instalada en ${targetDir}`);
+      installed.push(skill.name);
+      installSpinner.stop(`✓ Skill '${skill.name}' instalada en ${targetDir}`);
     } catch (err) {
-      installSpinner.stop(`✕ Falló la instalación de '${skill}'.`);
+      installSpinner.stop(`✕ Falló la instalación de '${skill.name}'.`);
       p.log.error(err.message);
     }
   }

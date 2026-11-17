@@ -12,15 +12,15 @@ Requires Node.js 20+ and an interactive terminal.
 
 ## What it does
 
-1. Lists the skill folders published in [`SKILLS/`](https://github.com/pa-ku/pakuskills/tree/main/SKILLS) of this repo
+1. Lists the skills published in [`SKILLS/`](https://github.com/pa-ku/pakuskills/tree/main/SKILLS) of this repo, grouped by category (`CODE`, `DESIGN`, …)
 2. Asks where you want them installed
-3. Lets you multiselect the skills
-4. Downloads each one with `degit` (no git history, no full clone)
+3. Lets you pick individual skills; space on a category header toggles the whole group
+4. Downloads each one with `degit` (no git history, no full clone) into a flat `<target>/<skill>/` folder
 
 ```
 ◇ Destino: .agents/skills
-◇ Instalando lcp-optimization...
-✓ Skill 'lcp-optimization' instalada en .agents/skills/lcp-optimization
+◇ Instalando atomic-design...
+✓ Skill 'atomic-design' instalada en .agents/skills/atomic-design
 ```
 
 ## Install targets
@@ -47,9 +47,18 @@ PAKU_SKILLS_TARGET=agents-global npx pakuskills
 
 ## How to add a skill to the catalog
 
-Skills live in the [`SKILLS/`](https://github.com/pa-ku/pakuskills/tree/main/SKILLS) folder of this repo, one folder per skill. The installer only lists directories inside `SKILLS/`, so keep skill folders flat and free of dot-prefixed names.
+Skills live in the [`SKILLS/`](https://github.com/pa-ku/pakuskills/tree/main/SKILLS) folder of this repo, grouped by category:
 
-Each folder needs a `SKILL.md` whose frontmatter `name` matches the folder name, or VS Code and opencode silently skip it:
+```
+SKILLS/
+  CODE/
+    atomic-design/SKILL.md
+    design-system-builder/SKILL.md
+  DESIGN/
+    flyer-digital/SKILL.md
+```
+
+The installer reads the repo tree and only lists folders that contain a `SKILL.md`. Each folder needs one whose frontmatter `name` matches the folder name, or VS Code and opencode silently skip it:
 
 ```markdown
 ---
@@ -60,6 +69,8 @@ description: What this skill does and when to use it.
 ## Instructions
 ...
 ```
+
+To add a new category, create a folder directly under `SKILLS/`. A skill folder placed directly under `SKILLS/` is listed under the `General` group.
 
 ## Development
 
@@ -82,7 +93,8 @@ pnpm start   # run locally (needs an interactive terminal)
 | `✕ Este instalador necesita una terminal interactiva` | You ran it in a pipeline or CI script. Use an interactive shell, or set `PAKU_SKILLS_TARGET` and run from a real terminal. |
 | `rate limit de GitHub` | Unauthenticated API is capped at 60 requests/hour. Export `GITHUB_TOKEN`. |
 | `PAKU_SKILLS_TARGET inválido` | The value does not match any target. Valid values: `agents`, `agents-global`. |
-| `GitHub respondió 404` | The `SKILLS/` folder was renamed or moved. Update `SKILLS_PATH` in `cli.js`. |
+| `GitHub respondió 404` | The repo, the branch, or the `SKILLS/` folder was renamed or moved. Update `SKILLS_PATH` / branch in `cli.js`. |
+| `Omitidas por no tener SKILL.md` | A candidate folder under `SKILLS/<category>/` has no `SKILL.md`. Add it (or delete the folder) for the skill to appear in the catalog. |
 | Skill installed but not showing up | The frontmatter `name` does not match the folder name, or the file is not named `SKILL.md`. |
 | Skill already exists prompt | The installer asks before overwriting. `No` skips that skill. |
 
