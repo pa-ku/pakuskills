@@ -6,6 +6,10 @@ import degit from 'degit';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { setTimeout as sleep } from 'node:timers/promises';
+import { createRequire } from 'node:module';
+
+const { version: VERSION } = createRequire(import.meta.url)('./package.json');
 
 const REPO_OWNER = 'pa-ku';
 const REPO_NAME = 'pakuskills';
@@ -124,7 +128,152 @@ function duplicatedNames(skills) {
   return [...counts].filter(([, count]) => count > 1).map(([name]) => name);
 }
 
+// Wordmark "PAKUSKILLS" en bloques ▀▄█ (4 filas, ~61 columnas).
+const BANNER = [
+  '▄▀▀▀▄ ▄▀▀▀▄ █  ▄▀ █   █ ▄▀▀▀▀ █  ▄▀ ▀▀█▀▀ █     █     ▄▀▀▀▀',
+  '█▄▄▄▀ █▄▄▄█ █▄▀   █   █ ▀▄▄▄  █▄▀     █   █     █     ▀▄▄▄',
+  '█     █   █ █ ▀▄  █   █     █ █ ▀▄    █   █     █         █',
+  '▀     ▀   ▀ ▀   ▀  ▀▀▀  ▀▀▀▀  ▀   ▀ ▀▀▀▀▀ ▀▀▀▀▀ ▀▀▀▀▀ ▀▀▀▀',
+];
+const BANNER_INDENT = '  ';
+const BANNER_WIDTH = BANNER[0].length;
+
+// cyan → indigo → pink
+const GRADIENT = [
+  [34, 211, 238],
+  [129, 140, 248],
+  [244, 114, 182],
+];
+
+const SHINE_FRAMES = 24;
+const SHINE_FRAME_MS = 38;
+const SHINE_SIGMA = 8.5;
+
+function supportsColor() {
+  if (process.env.NO_COLOR || process.env.TERM === 'dumb') return false;
+  return Boolean(process.stdout.isTTY);
+}
+
+const COLOR = supportsColor();
+
+function supportsAnimation() {
+  if (!COLOR) return false;
+  if (process.env.PAKU_SKILLS_NO_ANIM) return false;
+  if (process.env.CI) return false;
+  return true;
+}
+
+function mixRgb(from, to, amount) {
+  return from.map((value, index) =>
+    Math.round(value + (to[index] - value) * amount),
+  );
+}
+
+function gradientAt(position) {
+  const clamped = Math.min(1, Math.max(0, position));
+  const scaled = clamped * (GRADIENT.length - 1);
+  const index = Math.min(GRADIENT.length - 2, Math.floor(scaled));
+  return mixRgb(GRADIENT[index], GRADIENT[index + 1], scaled - index);
+}
+
+function paint(rgb, text) {
+  return `\x1b[38;2;${rgb[0]};${rgb[1]};${rgb[2]}m${text}\x1b[0m`;
+}
+
+function versionLine() {
+  const label = `v${VERSION}`;
+  const padding = ' '.repeat(
+    Math.max(0, BANNER_INDENT.length + BANNER_WIDTH - label.length),
+  );
+  return `${padding}${COLOR ? `\x1b[2m${label}\x1b[0m` : label}`;
+}
+
+function renderBanner(shine) {
+  if (!COLOR) {
+    return [...BANNER.map((line) => `${BANNER_INDENT}${line}`), versionLine()];
+  }
+
+  const lines = BANNER.map((line, row) => {
+    let output = BANNER_INDENT;
+
+    for (let column = 0; column < line.length; column += 1) {
+      const char = line[column];
+
+      if (char === ' ') {
+        output += ' ';
+        continue;
+      }
+
+      const position =
+        0.75 * (column / (BANNER_WIDTH - 1)) +
+        0.25 * (row / (BANNER.length - 1));
+      let rgb = gradientAt(position);
+
+      if (shine) {
+        const amount = shine(column, row);
+
+        if (amount > 0) {
+          rgb = rgb.map((value) => Math.round(value + (255 - value) * amount));
+        }
+      }
+
+      output += paint(rgb, char);
+    }
+
+    return output;
+  });
+
+  lines.push(versionLine());
+  return lines;
+}
+
+async function printBanner() {
+  const columns = process.stdout.columns || 80;
+
+  if (columns < BANNER_WIDTH + BANNER_INDENT.length + 2) {
+    const suffix = COLOR ? `\x1b[2mv${VERSION}\x1b[0m` : `v${VERSION}`;
+    process.stdout.write(`${BANNER_INDENT}PAKUSKILLS ${suffix}\n\n`);
+    return;
+  }
+
+  if (!COLOR || !supportsAnimation()) {
+    process.stdout.write(`${renderBanner(null).join('\n')}\n\n`);
+    return;
+  }
+
+  const travel = BANNER_WIDTH + 40;
+
+  process.stdout.write('\x1b[?25l');
+
+  try {
+    for (let frame = 0; frame < SHINE_FRAMES; frame += 1) {
+      const center = -20 + (travel * frame) / (SHINE_FRAMES - 1);
+      const shine =
+        frame === SHINE_FRAMES - 1
+          ? null
+          : (column) =>
+              0.85 *
+              Math.exp(-((column - center) ** 2) / (2 * SHINE_SIGMA ** 2));
+      const lines = renderBanner(shine);
+
+      if (frame > 0) process.stdout.write(`\x1b[${lines.length}A`);
+      process.stdout.write(`${lines.join('\n')}\n`);
+
+      if (frame < SHINE_FRAMES - 1) await sleep(SHINE_FRAME_MS);
+    }
+  } finally {
+    process.stdout.write('\x1b[?25h');
+  }
+
+  process.stdout.write('\n');
+}
+
 async function main() {
+  if (process.argv.includes('--version') || process.argv.includes('-v')) {
+    process.stdout.write(`PAKUSKILLS v${VERSION}\n`);
+    return;
+  }
+
   if (!process.stdin.isTTY) {
     console.error(
       '✕ Este instalador necesita una terminal interactiva. Ejecútalo desde tu shell, no desde un pipeline.',
@@ -132,6 +281,8 @@ async function main() {
     process.exitCode = 1;
     return;
   }
+
+  await printBanner();
 
   let target;
   try {

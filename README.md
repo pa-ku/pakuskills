@@ -8,7 +8,7 @@ Interactive installer for the skills shipped in this repo. Pick a destination an
 npx pakuskills
 ```
 
-Requires Node.js 20+ and an interactive terminal.
+Requires Node.js 20+ and an interactive terminal. `npx pakuskills --version` (or `-v`) prints the version and exits without touching the network.
 
 ## What it does
 
@@ -39,6 +39,7 @@ The default is `.agents/skills/`. Both targets follow the [Agent Skills](https:/
 | `PAKU_SKILLS_TARGET` | Skips the destination prompt. One of `agents`, `agents-global`. |
 | `GITHUB_TOKEN` | Optional. Raises the GitHub API rate limit from 60 to 5000 requests/hour. |
 | `DEBUG` | Optional. Prints the full stack trace on unexpected errors. |
+| `PAKU_SKILLS_NO_ANIM` | Optional. Skips the banner shine animation and prints the static wordmark. Also implied by `CI` or `NO_COLOR`. |
 
 ```bash
 # Example: install into ~/.agents/skills without the prompt
