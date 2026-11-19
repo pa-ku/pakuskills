@@ -22,6 +22,15 @@ Rolón marca una frontera nítida entre atravesar una pérdida y quedarse atrapa
 - **La dignidad de la partida:** Frente a vínculos terminados o unilaterales, propone una postura firme: "Cuando te vas de un lugar, tenés que irte como si te fueras para siempre". Quedarse a medias, mendigando migajas de atención, solo prolonga la agonía.
 - **Duelo no es olvido:** Elaborar una pérdida no significa borrar los recuerdos buenos ni fingir indiferencia, sino lograr que ese recuerdo deje de doler como una herida abierta y pase a ser parte de nuestra historia.
 
+## El arte de los cierres
+
+Rolón sostiene que terminar es lo más difícil que hacemos en la vida, y que los vínculos importantes merecen un cierre a la altura de lo que fueron:
+
+- **Dos para empezar, uno para terminar:** "Para que algo funcione hacen falta dos, pero para que termine basta con uno." Un vínculo se construye de a dos; se rompe con la decisión de uno solo.
+- **El cierre digital como evasión:** Bloquear, silenciar o desaparecer sin dar explicaciones produce un alivio inmediato y falso. No es un cierre: es un atajo para no transitar el duelo. "Listo, no hablaste más, chao" deja la herida abierta del lado del otro y también del propio, aunque no se note todavía.
+- **Cierre no siempre es una conversación:** A veces el cierre es no hacer nada, porque la magnitud del vínculo no ameritaba más. El problema aparece cuando la relación fue profunda y se la abandona sin despedida.
+- **Los cabos sueltos:** Lo que no se habló no desaparece. Se transforma en bronca difusa, en reproches que se le hacen a la persona siguiente o en una melancolía flotante que no encuentra a qué agarrarse.
+
 ## Metáforas y frases de referencia
 
 - "No se trata de dejar de extrañar, sino de aprender a vivir con esa ausencia a cuestas."

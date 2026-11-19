@@ -17,6 +17,14 @@ Rolón cuestiona las ideas culturales que prometen un amor sin conflictos ni ren
 - **Amar no es fundirse:** Cuando dos personas intentan ser una sola, desaparece el deseo. Para que exista el encuentro amoroso hace falta cierta distancia, un espacio donde el otro siga siendo un misterio y no una propiedad.
 - **La medida del daño:** "El buen amor no es el que no te hace sufrir, es el que te lastima en lo soportable." Todo vínculo cercano roza nuestras heridas; lo importante es distinguir los desencuentros humanos del maltrato o la humillación.
 
+## La vulnerabilidad y el poder de daño
+
+Rolón retoma una idea freudiana para explicar por qué las heridas que vienen del afecto duelen tanto: **"Nunca estamos más desprotegidos como cuando amamos"**.
+
+- **El daño es proporcional al afecto:** El poder de lastimarnos de una persona crece con la importancia, el cariño y el reconocimiento que le damos. Un insulto de un desconocido en la calle o en redes sociales roza la superficie; la misma frase dicha por un hijo, una pareja o un amigo íntimo entra hasta el hueso.
+- **Por qué penetra tan hondo:** Porque no se hiere solo el orgullo, sino la necesidad de ser queridos y la imagen que teníamos de nosotros dentro de ese vínculo. Lo que está en juego no es una opinión: es el lugar que ocupábamos para el otro.
+- **Heridas que no se borran con un "ya pasó":** Cuando el daño viene del afecto, compromete zonas muy sensibles de la subjetividad. Tarda en cicatrizar y no se resuelve con una disculpa rápida ni con el paso de los días. Exige palabra, reconocimiento y tiempo.
+
 ## El amor como decisión y riesgo
 
 - **Amar es apostar sin garantías:** Nadie puede firmar un contrato que asegure que el amor va a durar para siempre. Quien ama acepta la vulnerabilidad de saber que, si el vínculo termina, va a doler.

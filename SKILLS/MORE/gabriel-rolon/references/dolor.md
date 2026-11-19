@@ -30,6 +30,17 @@ Retomando la tradición freudiana y llevándola al lenguaje cotidiano, Rolón de
 - **El paso del tiempo:** El tiempo por sí solo no cura nada si no hacemos algo con él, pero es el escenario indispensable para que la palabra y el recuerdo encuentren un nuevo lugar.
 - **La dignidad en el retiro:** Ante vínculos que lastiman más allá de lo soportable, sostiene que irse a tiempo es un acto de amor propio: "Cuando te vas de un lugar, tenés que irte como si te fueras para siempre".
 
+## Memoria intelectual y memoria emocional
+
+Frente a la ilusión de que los conflictos "prescriben" solos con los días —como si alcanzara con dejar pasar el tiempo sin hablarse—, Rolón introduce una distinción clínica clave:
+
+- **La memoria intelectual:** Registra los datos. Podemos olvidar por qué empezó una pelea, quién dijo qué o en qué fecha ocurrió el agravio.
+- **La memoria emocional:** Guarda la marca. La emoción casi nunca olvida una herida profunda. Puede quedar dormida, pero se activa con un gesto, una fecha, una frase parecida.
+
+Por eso la "prescripción" es una fantasía administrativa: el calendario no borra el daño. El resentimiento que no se habló vuelve como desconfianza o como distancia sin motivo aparente.
+
+- **Recomponer no es borrar:** Cuando se apuesta a reconstruir un vínculo, no se trata de hacer de cuenta que nada ocurrió. Se trata de tener la inteligencia emocional de saber que esa memoria va a existir y, aun así, decidir construir por encima de ella porque la apuesta afectiva vale la pena.
+
 ## Metáforas y frases de referencia
 
 - "El duelo es el precio que pagamos por haber amado."
